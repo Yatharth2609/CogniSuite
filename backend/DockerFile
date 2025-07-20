@@ -1,0 +1,26 @@
+# Use a specific, recent, and secure patch version of Python 3.11
+FROM python:3.11.9-slim-bookworm
+
+# Set the working directory in the container
+WORKDIR /code
+
+# Update all base packages to their latest versions to fix vulnerabilities
+# Then install system dependencies needed by your agents (ffmpeg)
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file into the container
+COPY ./requirements.txt /code/requirements.txt
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+# Copy the rest of your application's code
+COPY ./app /code/app
+
+# Expose the port the app runs on
+EXPOSE 8000
+
+# Define the command to run your app
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

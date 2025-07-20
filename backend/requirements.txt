@@ -6,4 +6,11 @@ langgraph
 langchain-openai
 sse-starlette
 pydantic
-langchain-community
+pypdf
+faiss-cpu
+openai-whisper
+ffmpeg-python
+elevenlabs
+httpx
+certifi
+openai
