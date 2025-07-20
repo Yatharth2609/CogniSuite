@@ -1,0 +1,48 @@
+# Environment Variables
+# Ignore environment variable files to protect sensitive data like API keys and database credentials.
+.env
+.env.*
+!.env.example
+
+# Dependency Directories
+# Ignore directories containing installed packages.
+/node_modules
+/venv/
+/env/
+
+# Python specific
+# Ignore Python bytecode, cache, and distribution files.
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+/dist/
+/build/
+*.egg-info/
+
+# Java specific
+# Ignore compiled Java class files, JARs, and build outputs from tools like Maven or Gradle.
+*.class
+*.jar
+*.war
+*.ear
+/target/
+/build/
+.gradle/
+
+# Log files
+# Ignore log files which can become large and are specific to an environment.
+*.log
+logs/
+
+# Database files
+# Ignore temporary database files.
+*.sqlite3
+*.db
+
+# Editor and OS files
+# Ignore configuration files for editors and operating system-specific files.
+.vscode/
+.idea/
+.DS_Store
+*.swp
