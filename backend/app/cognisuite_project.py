@@ -1,7 +1,6 @@
 # Project: CogniSuite - Unified GenAI Platform
 # Tech Stack: LangGraph + Python (Backend), FastAPI, React (Frontend), deployed on Azure/GCP
 
-# Due to the large scope of the project (5 use cases, full stack), we will structure and implement it module by module.
 # Below is the high-level file/folder structure. We'll start with the backend setup first.
 
 # === Folder Structure (Monorepo) ===
@@ -50,7 +49,3 @@
 # │   └── gcp.yaml
 # └── README.md
 
-# Now I will begin by implementing the backend step-by-step, starting from main.py and routes.
-
-# Please respond with "Proceed" so I can begin generating the full backend implementation first (FastAPI + LangGraph agents).
-# Once backend is complete, we’ll continue to frontend and deployment configurations.

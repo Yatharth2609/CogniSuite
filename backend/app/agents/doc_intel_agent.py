@@ -15,8 +15,7 @@ from app.models import DocIntelState
 
 load_dotenv()
 
-# --- Initialize Azure Services ---
-# Initialize the LLM for answering questions
+
 llm = AzureChatOpenAI(
     api_version="2024-10-21",
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -24,12 +23,13 @@ llm = AzureChatOpenAI(
     azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT"),
     temperature=0.0
 )
+
 # Initialize the embeddings model for vectorizing the document
 embeddings = AzureOpenAIEmbeddings(
     api_version="2024-10-21",
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    azure_deployment="text-embedding-3-small", # Use a dedicated embedding model deployment
+    azure_deployment="text-embedding-3-small",
 )
 
 # --- Agent Logic ---

@@ -295,7 +295,6 @@ def create_vector_graphics_graph() -> StateGraph:
     
     return workflow.compile()
 
-# Usage example
 def generate_vector_graphics(
     prompt: str,
     vector_format: str = "svg",
@@ -314,24 +313,8 @@ def generate_vector_graphics(
         color_scheme=color_scheme
     )
     
-    # Create and run the graph
     graph = create_vector_graphics_graph()
     final_state = graph.invoke(initial_state)
     
     return final_state
 
-# Example usage
-if __name__ == "__main__":
-    result = generate_vector_graphics(
-        prompt="Create a modern logo for a tech startup with geometric shapes",
-        vector_format="svg",
-        style="modern",
-        complexity="medium",
-        color_scheme="vibrant"
-    )
-    
-    print(f"Generated {result.vector_format.upper()}:")
-    print(result.vector_code)
-    print(f"Valid: {result.is_valid}")
-    if result.validation_errors:
-        print(f"Errors: {result.validation_errors}")

@@ -17,8 +17,6 @@ llm = AzureChatOpenAI(
     temperature=0.0
 )
 
-# --- Agent Logic ---
-
 
 def analyze_code(state: CodeAnalyzerState) -> CodeAnalyzerState:
     """Analyzes the given code and generates a high-level explanation."""

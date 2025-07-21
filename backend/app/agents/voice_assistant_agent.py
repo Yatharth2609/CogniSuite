@@ -65,13 +65,11 @@ def synthesize_speech(text_input: str):
 
     client = ElevenLabs(api_key=ELEVEN_API_KEY)
     
-    # ** THE FIX IS HERE **
-    # Using the exact parameter names from the documentation
     audio_stream = client.text_to_speech.stream(
         text=text_input,
-        voice_id=ELEVEN_VOICE_ID,      # Corrected parameter: voice_id
-        model_id="eleven_multilingual_v2", # Corrected parameter: model_id
-        voice_settings={              # Settings passed as a dictionary
+        voice_id=ELEVEN_VOICE_ID,      
+        model_id="eleven_multilingual_v2", 
+        voice_settings={             
             "stability": 0.5,
             "similarity_boost": 0.75
         }

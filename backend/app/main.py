@@ -5,17 +5,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 import json
 from pydantic import BaseModel
-from typing import Dict, Optional, Any
+from typing import Dict
 import pypdf
 from langchain_core.documents import Document
-from fastapi import File, UploadFile, Form, Query, HTTPException, APIRouter
+from fastapi import File, UploadFile, Form, Query, APIRouter
 import uuid
 from langchain_openai import AzureChatOpenAI
 from fastapi.responses import StreamingResponse
 from .models import AgentState
-import io
 import json
-import base64
 from fastapi.responses import StreamingResponse
 from sse_starlette.sse import EventSourceResponse
 
@@ -109,8 +107,6 @@ async def generate_vector_graphics_endpoint(request: VectorGraphicsRequest):
 
     return EventSourceResponse(event_stream())
 
-# --- Backward Compatible SVG Endpoint ---
-
 
 @app.get("/api/generate-svg")
 async def generate_svg_endpoint(
@@ -126,7 +122,7 @@ async def generate_svg_endpoint(
 
     config = {"configurable": {"thread_id": "cognisuite-svg-thread"}}
 
-    # Use enhanced AgentState for SVG generation
+    # Use AgentState for SVG generation
     inputs = AgentState(
         prompt=prompt,
         vector_format="svg",
@@ -143,7 +139,7 @@ async def generate_svg_endpoint(
                     output = event["data"]["output"]
                     output_data = output.model_dump() if isinstance(output, BaseModel) else output
 
-                    # Enhanced response with validation status
+                    # response with validation status
                     data = json.dumps({
                         "step": event["name"],
                         "output": output_data,
@@ -165,8 +161,6 @@ async def generate_svg_endpoint(
             yield "[ERROR]"
 
     return EventSourceResponse(event_stream())
-
-# --- Format-Specific Endpoints ---
 
 
 @app.get("/api/generate-eps")
@@ -240,8 +234,6 @@ async def generate_pdf_endpoint(
 
     return EventSourceResponse(event_stream())
 
-# --- Utility Endpoints ---
-
 
 @app.get("/api/supported-formats")
 async def get_supported_formats():
@@ -258,8 +250,6 @@ async def get_supported_formats():
 async def validate_vector_code(code: str, format: str):
     """Validate vector graphics code."""
     try:
-        # You can implement validation logic here
-        # For now, basic format checking
         if format == "svg":
             is_valid = code.strip().startswith('<svg') and '</svg>' in code
         elif format == "eps":
@@ -298,9 +288,9 @@ async def generate_data_endpoint(prompt: str, count: int):
                     output_data = output.model_dump() if isinstance(output, BaseModel) else output
                     data = json.dumps(
                         {"step": event["name"], "output": output_data})
-                    # ** THE FIX IS HERE **
+
                     yield data
-            # Also fix the final message to be clean
+
             yield "[DONE]"
         except Exception as e:
             print(f"Error during stream: {e}")
@@ -388,7 +378,7 @@ async def code_analyzer_analyze(thread_id: str):
         try:
             # Get the analysis from the agent function
             updated_state = analyze_code(current_state)
-            agent_states[thread_id] = updated_state  # Persist the analysis
+            agent_states[thread_id] = updated_state 
 
             # Stream the result
             data = json.dumps({"analysis": updated_state.analysis})
@@ -453,15 +443,10 @@ If asked what you can do, mention you can answer questions and hold a conversati
 
 # --- AI Assistant Chat Endpoint ---
 
-# In backend/app/main.py
-
-
 @app.get("/api/assistant/chat")
 async def assistant_chat(thread_id: str, message: str):
     """Handles a text-based chat message and streams the response."""
     thread_id = thread_id
-
-    # --- PROMPT ENGINEERING START ---
 
     system_prompt = """You are Ava, the master AI assistant for the CogniSuite platform. Your personality is helpful, knowledgeable, and slightly enthusiastic.
 
@@ -495,7 +480,6 @@ You must guide users and answer questions about the following tools available in
     - Portfolio: https://portfolio-new-eta-five.vercel.app/
     - Email: yatharth.mishra2002@gmail.com
 """
-    # --- PROMPT ENGINEERING END ---
 
     if thread_id != 'new' and thread_id in agent_states and isinstance(agent_states[thread_id], ChatState):
         current_state = agent_states[thread_id]
@@ -516,7 +500,6 @@ You must guide users and answer questions about the following tools available in
         temperature=0.7
     )
 
-    # ... (the rest of the function remains exactly the same) ...
     async def event_stream():
         try:
             stream = chat_llm.stream(current_state.chat_history)
